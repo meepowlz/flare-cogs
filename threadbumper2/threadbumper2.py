@@ -4,7 +4,7 @@ import discord
 from discord.ext import tasks
 from redbot.core import Config, commands
 
-log = logging.getLogger("red.flare.threadbumper")
+log = logging.getLogger("red.flare.threadbumper2")
 
 
 class ThreadBumper2(commands.Cog):
