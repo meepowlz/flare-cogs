@@ -24,7 +24,7 @@ class ThreadBumper(commands.Cog):
         # this cog does not store any data
         pass
 
-    @tasks.loop(hours=12)
+    @tasks.loop(hours=168)
     async def bump_threads(self):
         config = await self.config.all_guilds()
         for guild_id, guild_data in config.items():
@@ -36,8 +36,8 @@ class ThreadBumper(commands.Cog):
                 thread = guild.get_thread(thread_id)
                 if thread is None:
                     continue
-                await thread.edit(archived=False, auto_archive_duration=60)
-                await thread.edit(archived=False, auto_archive_duration=1440)
+                await thread.edit(archived=False, auto_archive_duration=10080)
+                await thread.send(content=":punch:")
                 log.debug(f"Thread {thread.id} was bumped")
 
     def __init__(self, bot):
