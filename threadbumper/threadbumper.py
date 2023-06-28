@@ -61,15 +61,14 @@ class ThreadBumper(commands.Cog):
         """
         Bumps all threads currently being kept-alive
         """
-        async with self.config.guild(ctx.guild).threads() as threads:
-            for thread in threads:
-                await thread.send(":punch:")
+        await self.bump_threads()
 
     @commands.command()
     async def checkalive(self, ctx):
         """
         Lists threads currently being kept-alive.
         """
+
         await ctx.send(self.config.guild(ctx.guild).threads())
 
 
