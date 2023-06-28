@@ -4,15 +4,17 @@ import discord
 from discord.ext import tasks
 from redbot.core import Config, commands
 
-log = logging.getLogger("red.flare.threadbumper2")
+log = logging.getLogger("red.flare.threadbumper")
 
 
-class ThreadBumper2(commands.Cog):
-    __version__ = "0.0.1"
-    __author__ = "flare#0001"
+CAKEY_THREAD_ID = 1057089253135351940
+
+
+class ThreadBumper(commands.Cog):
+    __version__ = "1.0.0"
+    __author__ = "meepowlz"
 
     def format_help_for_context(self, ctx):
-        """Thanks Sinbad."""
         pre_processed = super().format_help_for_context(ctx)
         return f"{pre_processed}\nCog Version: {self.__version__}\nAuthor: {self.__author__}"
 
@@ -36,9 +38,14 @@ class ThreadBumper2(commands.Cog):
                 thread = guild.get_thread(thread_id)
                 if thread is None:
                     continue
-                await thread.edit(archived=False, auto_archive_duration=10080)
-                log.debug(f"Thread {thread.id} was bumped")
-                await thread.send(":punch:")
+                else:
+                    if thread_id == CAKEY_THREAD_ID:
+                        await thread.send(":boxing_glove:")
+                    else:
+                        await thread.send(":punch:")
+                    await thread.edit(archived=False, auto_archive_duration=10080)
+                    log.debug(f"Thread {thread.id} was bumped")
+
 
     def __init__(self, bot):
         self.bot = bot
@@ -48,6 +55,23 @@ class ThreadBumper2(commands.Cog):
 
     def cog_unload(self):
         self.bump_threads.cancel()
+
+    @commands.command()
+    async def bumpall(self, ctx):
+        """
+        Bumps all threads currently being kept-alive
+        """
+        async with self.config.guild(ctx.guild).threads() as threads:
+            for thread in threads:
+                await thread.send(":punch:")
+
+    @commands.command()
+    async def checkalive(self, ctx):
+        """
+        Lists threads currently being kept-alive.
+        """
+        await ctx.send(self.config.guild(ctx.guild).threads())
+
 
     @commands.command()
     @commands.bot_has_permissions(manage_threads=True)
@@ -66,3 +90,5 @@ class ThreadBumper2(commands.Cog):
                 await ctx.send(
                     f"{thread.mention} under {thread.parent.mention} is now being bumped."
                 )
+
+

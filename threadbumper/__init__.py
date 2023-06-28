@@ -1,8 +1,8 @@
 import discord
 from redbot.core.errors import CogLoadError
 
-from .threadbumper2 import ThreadBumper2
+from .threadbumper import ThreadBumper
 
 
 async def setup(bot):
-    await bot.add_cog(ThreadBumper2(bot))
+    await bot.add_cog(ThreadBumper(bot))
